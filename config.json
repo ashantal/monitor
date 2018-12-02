@@ -1,0 +1,4 @@
+{
+    "channel":"mychannel",
+    "peer":"grpc://localhost:7051"
+}
