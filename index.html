@@ -20,8 +20,11 @@
       $(function () {
         var socket = io();
         socket.on('event', function(msg){
-          $('#messages').append($('<li>').text(msg));
+          var div = $('<div>').text(msg);
+          $('#messages').append($('<li>').append(div));
           window.scrollTo(0, document.body.scrollHeight);
+          div.animate({left: '100px'}, "slow");
+          div.animate({fontSize: '.5em'}, "slow");
         });
       });
     </script>

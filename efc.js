@@ -29,10 +29,10 @@ return{
 		        throw new Error('Failed to get user1.... run registerUser.js');
 			}
 			const channel_event_hub = channel.newChannelEventHub(peer.getName());
-			
-			block_reg = channel_event_hub.registerBlockEvent((full_block) => {
+			const block_reg = channel_event_hub.registerBlockEvent((full_block) => {
 				//console.log(util.inspect(full_block, false, null, true /* enable colors */));
-				var bh = full_block.header;
+				try{
+					var bh = full_block.header;
 				var payload = full_block.data.data[0].payload;
 				var action = payload.data.actions[0].payload.action;
 				var ph = payload.header;
@@ -45,6 +45,10 @@ return{
 				+ ' ' + set.namespace
 				+ ' ' + write.value
 				);
+				}
+				catch(ex){
+					console.log(ex);
+				}
 
 			}, (error)=> {
 				console.log('Failed to receive the block event ::'+error);
