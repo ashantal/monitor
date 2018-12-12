@@ -33,23 +33,22 @@ return{
 				//console.log(util.inspect(full_block, false, null, true /* enable colors */));
 				try{
 					var bh = full_block.header;
-				var payload = full_block.data.data[0].payload;
-				var action = payload.data.actions[0].payload.action;
-				var ph = payload.header;
-				//console.log(util.inspect(action, false, null, true /* enable colors */));
-				var set = action.proposal_response_payload.extension.results.ns_rwset[0];
-				var write = set.rwset.writes[0];
-				io.emit('event','block #' + bh.number
-				+ ' ' + ph.channel_header.channel_id
-				+ ' ' + ph.signature_header.creator.Mspid
-				+ ' ' + set.namespace
-				+ ' ' + write.value
-				);
+					var payload = full_block.data.data[0].payload;
+					var action = payload.data.actions[0].payload.action;
+					var ph = payload.header;
+					//console.log(util.inspect(action, false, null, true /* enable colors */));
+					var set = action.proposal_response_payload.extension.results.ns_rwset[0];
+					var write = set.rwset.writes[0];
+					io.emit('event','block #' + bh.number
+						+ ' ' + ph.channel_header.channel_id
+						+ ' ' + ph.signature_header.creator.Mspid
+						+ ' ' + set.namespace
+						+ ' ' + write.value
+					);
 				}
 				catch(ex){
 					console.log(ex);
 				}
-
 			}, (error)=> {
 				console.log('Failed to receive the block event ::'+error);
 			});

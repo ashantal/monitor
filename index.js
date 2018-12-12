@@ -10,10 +10,9 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
-  socket.on('event', function(msg){
-    io.emit('event', msg);
-  });
+  console.log('a monitor connected...');
 });
+
 efc.block_events(io);
 
 http.listen(port, function(){
