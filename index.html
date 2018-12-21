@@ -6,27 +6,47 @@
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 1em Helvetica, Arial; }
       form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
+      #messages { list-style-type: none; margin: 0; padding: 0; width: 100% }
+      #messages tr { padding: 5px 10px; }
+      #messages tr:nth-child(odd) { background: #eee; }
       #messages { margin-bottom: 40px }
     </style>
   </head>
   <body>
-    <ul id="messages">
-      <li>Event Monitor</li>
-    </ul>
+    <h2> 
+        <div id="msg">connecting</div>
+        <div id="blocks"></div>
+        <div id="events"></div>
+    </h2>
+    <table id="messages">
+    </table>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       $(function () {
+        var count = 0;
         var socket = io();
+        function load(msg){
+          $('#blocks').text('block height ' + msg.block);
+          $('#events').text('event count ' + count);
+          $('#messages')
+          .prepend($('<tr>')
+          .append($('<td>').append(msg.block))
+          .append($('<td>').append(msg.channel))
+          .append($('<td>').append(msg.msp))
+          .append($('<td>').append(msg.namespace))
+          .append($('<td>').append(msg.transaction))
+          .animate({fontSize: '.7em'}, "slow"));
+        }
+        socket.on('connect', function(msg){
+          count=0;
+          $('#msg').text('connected');
+          $('#messages').empty();
+          socket.emit('sync', 3)
+        });
         socket.on('event', function(msg){
-          var div = $('<div>').text(msg);
-          $('#messages').append($('<li>').append(div));
-          window.scrollTo(0, document.body.scrollHeight);
-          div.animate({left: '100px'}, "slow");
-          div.animate({fontSize: '.7em'}, "slow");
+          count++;
+          load(msg);
         });
       });
     </script>

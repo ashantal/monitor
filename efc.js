@@ -5,8 +5,8 @@ var os            = require('os');
 var config 		  = require('./config.json');
 
 module.exports = (function() {
-return{
-	block_events: function(io){
+	return{
+	emit_events: function(io, options, event){
 		var fabric_client = new Fabric_Client();
 		var channel = fabric_client.newChannel(config.channel);
 		var peer = fabric_client.newPeer(config.peer);
@@ -39,22 +39,26 @@ return{
 					//console.log(util.inspect(action, false, null, true /* enable colors */));
 					var set = action.proposal_response_payload.extension.results.ns_rwset[0];
 					var write = set.rwset.writes[0];
-					io.emit('event','block #' + bh.number
-						+ ' ' + ph.channel_header.channel_id
-						+ ' ' + ph.signature_header.creator.Mspid
-						+ ' ' + set.namespace
-						+ ' ' + write.value
-					);
+					var data = {
+						'block' : bh.number,
+						'channel' : ph.channel_header.channel_id,
+						'msp' : ph.signature_header.creator.Mspid,
+						'namespace' : set.namespace,
+						'transaction' : write.value,
+					}
+					console.log(data);
+					io.emit('event', data);
 				}
 				catch(ex){
 					console.log(ex);
 				}
 			}, (error)=> {
 				console.log('Failed to receive the block event ::'+error);
-			});
+			},
+			options);
 			channel_event_hub.connect(true); //get full blocks
 		}).catch((err) => {
-			io.emit('event','Failed to invoke ' + err);
+			io.emit('error','Failed to invoke ' + err);
 		});
 	}
 }
