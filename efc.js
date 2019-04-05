@@ -21,12 +21,12 @@ module.exports = (function() {
 		    var crypto_store = Fabric_Client.newCryptoKeyStore({path: store_path});
 		    crypto_suite.setCryptoKeyStore(crypto_store);
 		    fabric_client.setCryptoSuite(crypto_suite);
-		    return fabric_client.getUserContext('admin', true);
+		    return fabric_client.getUserContext(config.user, true);
 		}).then((user_from_store) => {
 		    if (user_from_store && user_from_store.isEnrolled()) {
 		        member_user = user_from_store;
 		    } else {
-		        throw new Error('Failed to get user1.... run registerUser.js');
+		        throw new Error('Failed to get user.... run registerUser.js');
 			}
 			const channel_event_hub = channel.newChannelEventHub(peer.getName());
 			const block_reg = channel_event_hub.registerBlockEvent((full_block) => {
