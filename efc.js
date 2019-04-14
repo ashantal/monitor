@@ -46,7 +46,6 @@ module.exports = (function() {
 						'namespace' : set.namespace,
 						'transaction' : write.value,
 					}
-					console.log(data);
 					io.emit('event', data);
 				}
 				catch(ex){
